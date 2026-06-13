@@ -9,30 +9,85 @@
     <link href="https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="images.jpg" type="image/x-icon">
     <style>
-        body {
+        html, body {
+            height: 100%;
             margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-             font-family: "Imperial Script", cursive;
-             font-weight: 400;
-             font-size: large;
-            background: linear-gradient(180deg, black,rgb(234, 17, 53),pink);
-            /* permitir que o botão se mova fora sem cortar no mobile */
-            overflow: visible;
+            padding: 0;
             box-sizing: border-box;
+            overflow: hidden; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: "Imperial Script", cursive;
+            font-weight: 400;
+            font-size: large;
+            background: linear-gradient(180deg, black,rgb(234, 17, 53),pink);
             -webkit-font-smoothing: antialiased;
         }
 
         h1, p {
             text-align: center;
-            margin: 0 0 12px;
-            font-size: 35px;
+            margin: 0 0 8px;
+            font-size: 28px;
             color: white;
-             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .stage {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            padding: 24px;
+            box-sizing: border-box;
+            pointer-events: auto;
+            overflow: visible;
+            touch-action: none;
+        }
+
+        .content {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            pointer-events: auto;
+            max-height: calc(100vh - 160px);
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 8px;
+        }
+
+        .message {
+            background: transparent; 
+            color: white;
+            padding: 0; 
+            border-radius: 0;
+            box-shadow: none;
+            font-size: clamp(18px, 4.5vw, 28px);
+            line-height: 1.5;
+            text-align: center;
+            max-width: 100%;
+            margin: 12px auto 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .final-btn {
+            display: inline-block;
+            margin: 16px auto 0;
+            padding: 12px 20px;
+            background: linear-gradient(135deg,pink, rgb(234, 17, 53));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(197, 90, 90, 0.251);
+            font-size: 18px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .buttons {
@@ -46,7 +101,8 @@
             max-width: 600px;
             padding: 8px;
             box-sizing: border-box;
-            touch-action: none;
+            pointer-events: auto;
+            overflow: visible; 
         }
 
         button {
@@ -55,19 +111,16 @@
             font-size: 16px;
             cursor: pointer;
             transition: transform 200ms ease, left 200ms ease, top 200ms ease;
-                background: linear-gradient(135deg,pink, rgb(234, 17, 53));
-                border-radius: 8px;
-                box-shadow: 0 4px 6px rgba(197, 90, 90, 0.251);
+            background: linear-gradient(135deg,pink, rgb(234, 17, 53));
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(197, 90, 90, 0.251);
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             user-select: none;
             min-width: 90px;
         }
 
-        #noBtn {
-            position: relative;
-        }
-
+        #noBtn { position: relative; }
         #simBtn {
             position: relative;
             transform-origin: center center;
@@ -81,26 +134,71 @@
 
         #noBtn, #simBtn { flex: 0 0 auto; }
 
+        .content::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .content::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+        }
+        .content::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff7aa2 0%, #e91135 100%);
+            border-radius: 10px;
+            border: 2px solid rgba(0,0,0,0.08);
+            min-height: 24px;
+        }
+        .content::-webkit-scrollbar-thumb:hover {
+            filter: brightness(1.05);
+        }
+        .content::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        .content {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(233,17,53,0.95) rgba(255,255,255,0.06);
+        }
+
+        .content.scrollable::after {
+            content: '';
+            position: absolute;
+            right: 12px;
+            bottom: 8px;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(180deg, #ff7aa2 0%, #e91135 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(233,17,53,0.25);
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
         @media (max-width: 480px) {
-            h1, p { font-size: 20px; }
+            h1, p { font-size: 30px; }
             .buttons { height: auto; gap: 12px; padding: 12px; }
             button { padding: 14px 20px; font-size: 18px; border-radius: 12px; min-width: 120px; }
             #simBtn { max-width: 80%; }
+            .message { font-size: clamp(20px, 6.5vw, 36px); }
         }
     </style>
 </head>
 <body>
-    <h1>Feliz Primeiro Dia de Namoro kkkkk</h1>
-    <p>
-        espero que eu tenha conseguido te fazer se sentir especial até aqui <br>
-        eu te amo muito e quero passar o resto dos meus dias com você <br>
-        tenho uma pergunta para ti: <br>
-        você quer ser minha Namorada? <br>
-    </p>
+    <div class="stage">
+        <div class="content">
+            <h1>Feliz Primeiro Dia de Namoro kkkkk</h1>
+            <p>
+                espero que eu tenha conseguido te fazer se sentir especial até aqui<br>
+                eu te amo muito e quero passar o resto dos meus dias com você<br>
+                tenho uma pergunta para ti:<br>
+                você quer ser minha Namorada?
+            </p>
+        </div>
 
-    <div class="buttons">
-        <button id="simBtn" onclick="handleSimClick()" data-scale="1">Sim</button>
-        <button id="noBtn" onclick="evadeAndGrow(event)">Não</button>
+        <div class="buttons" aria-hidden="false">
+            <button id="simBtn" onclick="handleSimClick()" data-scale="1">Sim</button>
+            <button id="noBtn" onclick="evadeAndGrow(event)">Não</button>
+        </div>
     </div>
 
     <script>
@@ -122,12 +220,58 @@
             simBtn.textContent = next;
         }
 
-        function handleSimClick() {
-            const simBtn = document.getElementById('simBtn');
-            
-            const videoUrl = 'https://youtu.be/8Go6dHuylyM';
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
 
-             window.open(videoUrl, '_blank');
+        function handleSimClick() {
+            const text = `aeeeee, eu sabia que você ia aceitar! te amo muito, agora eu posso oficialmente te chamar de minha namorada? <3
+kkkkk.
+Vamos fazer algo para comemorar? vou te levar para jantar e depois a gente pode assistir um filme ou algo assim, o que você acha?
+
+nem acredito que agora eu posso chamar a minha princesa de minha namorada, agente finalmente está namorando, eu tô tão feliz! obrigado por me fazer a pessoa mais sortuda do mundo, eu prometo te fazer muito feliz e cuidar de você sempre, em troca você só precisa me prometer que os olhinhos pelos quais eu me apaixonei vão continuar brilhando para mim todos os dias e, que vão continuar sendo só meus 🙄🙄 
+eu te amo mil milhões`;
+
+            const content = document.querySelector('.content');
+            content.innerHTML = `<div class="message">${escapeHtml(text).replace(/\n/g, '<br>')}</div>`;
+
+            const buttons = document.querySelector('.buttons');
+            if (buttons && buttons.parentElement) buttons.parentElement.removeChild(buttons);
+
+            const noBtn = document.getElementById('noBtn');
+            if (noBtn && noBtn.parentElement) noBtn.parentElement.removeChild(noBtn);
+            const simBtn = document.getElementById('simBtn');
+            if (simBtn && simBtn.parentElement) simBtn.parentElement.removeChild(simBtn);
+
+            const finalBtn = document.createElement('button');
+            finalBtn.id = 'finalBtn';
+            finalBtn.className = 'final-btn'; /* usa a classe final-btn para o estilo */
+            finalBtn.textContent = 'Minha reação :D';
+            finalBtn.addEventListener('click', () => {
+                window.open('https://youtu.be/8Go6dHuylyM', '_blank');
+            });
+
+            content.appendChild(finalBtn);
+            finalBtn.focus();
+        }
+
+        function computeLimits(noWidth, noHeight, padding, extraSide, stage) {
+            const visibleMargin = Math.max(24, Math.round(window.innerWidth * 0.06)); 
+            const minLeft = Math.max(-extraSide, -noWidth + visibleMargin);
+            const maxLeftCalc = Math.max(minLeft, stage.clientWidth - noWidth - padding + extraSide);
+            const maxLeft = Math.min(maxLeftCalc, stage.clientWidth - visibleMargin);
+            const minTop = Math.max(-noHeight + visibleMargin, 0); 
+            const maxTop = Math.max(minTop, stage.clientHeight - visibleMargin);
+            return { minLeft, maxLeft, minTop, maxTop };
+        }
+
+        function clampCurrentPos(noBtn, limits) {
+            const curLeft = parseFloat(noBtn.style.left) || 0;
+            const curTop = parseFloat(noBtn.style.top) || 0;
+            let left = Math.min(limits.maxLeft, Math.max(limits.minLeft, curLeft));
+            let top = Math.min(limits.maxTop, Math.max(limits.minTop, curTop));
+            noBtn.style.left = left + 'px';
+            noBtn.style.top = top + 'px';
         }
 
         function evadeAndGrow(event) {
@@ -136,48 +280,57 @@
             const noBtn = document.getElementById('noBtn');
             const simBtn = document.getElementById('simBtn');
             const container = document.querySelector('.buttons');
+            const stage = document.querySelector('.stage');
 
-            const extraSide = 80;
+            const extraSide = Math.max(80, Math.round(window.innerWidth * 0.25));
+
+            if (!noBtn) return;
 
             if (getComputedStyle(noBtn).position !== 'absolute') {
+                const stageRect = stage.getBoundingClientRect();
+                const btnRect = noBtn.getBoundingClientRect();
+                if (noBtn.parentElement !== stage) stage.appendChild(noBtn);
                 noBtn.style.position = 'absolute';
-                const initLeft = Math.max(-extraSide, (container.clientWidth - noBtn.offsetWidth) / 2 + 70);
-                const initTop = Math.max(0, (container.clientHeight - noBtn.offsetHeight) / 2);
+                let initLeft = Math.round(btnRect.left - stageRect.left);
+                let initTop = Math.round(btnRect.top - stageRect.top);
+                if (!isFinite(initLeft)) initLeft = Math.round((stage.clientWidth - noBtn.offsetWidth) / 2);
+                if (!isFinite(initTop)) initTop = Math.round((stage.clientHeight - noBtn.offsetHeight) / 2);
                 noBtn.style.left = initLeft + 'px';
                 noBtn.style.top = initTop + 'px';
+                noBtn.style.zIndex = 999;
             }
 
-            let scale = parseFloat(simBtn.dataset.scale) || 1;
-            scale = Math.min(scale + 0.1, 2);
-            simBtn.dataset.scale = scale;
-            simBtn.style.transform = `scale(${scale})`;
-            changeSimText();
+            if (simBtn) {
+                let scale = parseFloat(simBtn.dataset.scale) || 1;
+                scale = Math.min(scale + 0.1, 2);
+                simBtn.dataset.scale = scale;
+                simBtn.style.transform = `scale(${scale})`;
+                changeSimText();
+            }
 
             const padding = 8;
             const noWidth = noBtn.offsetWidth;
             const noHeight = noBtn.offsetHeight;
 
-            const minLeft = -extraSide;
-            const maxLeft = Math.max(minLeft, container.clientWidth - noWidth - padding + extraSide);
-            const maxTop = Math.max(0, container.clientHeight - noHeight - padding);
+            const limits = computeLimits(noWidth, noHeight, padding, extraSide, stage);
 
-            const containerRect = container.getBoundingClientRect();
-            const simRectAbs = simBtn.getBoundingClientRect();
+            const stageRect = stage.getBoundingClientRect();
+            const simRectAbs = simBtn ? simBtn.getBoundingClientRect() : { left: stageRect.left + stage.clientWidth/2, top: stageRect.top + stage.clientHeight/2, right: stageRect.left + stage.clientWidth/2, bottom: stageRect.top + stage.clientHeight/2, width:0, height:0 };
             const simRect = {
-                left: simRectAbs.left - containerRect.left,
-                top: simRectAbs.top - containerRect.top,
-                right: simRectAbs.right - containerRect.left,
-                bottom: simRectAbs.bottom - containerRect.top,
+                left: simRectAbs.left - stageRect.left,
+                top: simRectAbs.top - stageRect.top,
+                right: simRectAbs.right - stageRect.left,
+                bottom: simRectAbs.bottom - stageRect.top,
                 width: simRectAbs.width,
                 height: simRectAbs.height
             };
 
             let left, top;
             let attempts = 0;
-            const maxAttempts = 150;
+            const maxAttempts = 200;
             while (attempts < maxAttempts) {
-                left = Math.floor(Math.random() * (maxLeft - minLeft + 1)) + minLeft;
-                top = Math.floor(Math.random() * (maxTop - padding + 1)) + padding;
+                left = Math.floor(Math.random() * (limits.maxLeft - limits.minLeft + 1)) + limits.minLeft;
+                top = Math.floor(Math.random() * (limits.maxTop - limits.minTop + 1)) + limits.minTop;
 
                 const candidate = { left, top, right: left + noWidth, bottom: top + noHeight };
                 if (!rectsOverlap(candidate, simRect)) break;
@@ -185,12 +338,11 @@
             }
 
             if (attempts >= maxAttempts) {
-               
                 const tryPositions = [
-                    { left: Math.max(minLeft, simRect.left - noWidth - padding), top: Math.max(padding, simRect.top) },
-                    { left: Math.min(maxLeft, simRect.right + padding), top: Math.max(padding, simRect.top) }, 
-                    { left: Math.max(minLeft, simRect.left), top: Math.max(padding, simRect.top - noHeight - padding) }, 
-                    { left: Math.max(minLeft, simRect.left), top: Math.min(maxTop, simRect.bottom + padding) } 
+                    { left: Math.max(limits.minLeft, simRect.left - noWidth - padding), top: Math.max(limits.minTop, simRect.top) },
+                    { left: Math.min(limits.maxLeft, simRect.right + padding), top: Math.max(limits.minTop, simRect.top) }, 
+                    { left: Math.max(limits.minLeft, simRect.left), top: Math.max(limits.minTop, simRect.top - noHeight - padding) }, 
+                    { left: Math.max(limits.minLeft, simRect.left), top: Math.min(limits.maxTop, simRect.bottom + padding) } 
                 ];
                 let placed = false;
                 for (const pos of tryPositions) {
@@ -203,38 +355,41 @@
                     }
                 }
                 if (!placed) {
-                    left = minLeft;
-                    top = padding;
+                    left = limits.minLeft;
+                    top = limits.minTop;
                 }
             }
+            left = Math.min(limits.maxLeft, Math.max(limits.minLeft, left));
+            top = Math.min(limits.maxTop, Math.max(limits.minTop, top));
 
             noBtn.style.left = left + 'px';
             noBtn.style.top = top + 'px';
         }
 
-        // eventos para desktop + mobile: mouseover, click e toques
         const noBtnEl = document.getElementById('noBtn');
-        noBtnEl.addEventListener('mouseover', () => {
-            evadeAndGrow();
-        });
-        // touchstart evita que o toque seja interpretado como clique/rolagem:
-        noBtnEl.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            evadeAndGrow(e);
-        }, { passive: false });
-        // movimento de toque também provoca evasão (ajuda em telas sensíveis)
-        noBtnEl.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            evadeAndGrow(e);
-        }, { passive: false });
+        if (noBtnEl) {
+            noBtnEl.addEventListener('mouseover', () => { evadeAndGrow(); });
+            noBtnEl.addEventListener('touchstart', (e) => { e.preventDefault(); evadeAndGrow(e); }, { passive: false });
+            noBtnEl.addEventListener('touchmove', (e) => { e.preventDefault(); evadeAndGrow(e); }, { passive: false });
+        }
 
-        // garantir sim também responde bem a toques rápidos
+        const stageEl = document.querySelector('.stage');
+        if (stageEl) stageEl.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
+
         const simBtnEl = document.getElementById('simBtn');
-        simBtnEl.addEventListener('touchstart', (e) => {
-            // permitir abrir link em toque rápido
-            e.stopPropagation();
-        });
+        if (simBtnEl) simBtnEl.addEventListener('touchstart', (e) => { e.stopPropagation(); });
 
+        window.addEventListener('resize', () => {
+            const noBtn = document.getElementById('noBtn');
+            if (!noBtn) return;
+            const stage = document.querySelector('.stage');
+            const padding = 8;
+            const extraSide = Math.max(80, Math.round(window.innerWidth * 0.25));
+            const noWidth = noBtn.offsetWidth;
+            const noHeight = noBtn.offsetHeight;
+            const limits = computeLimits(noWidth, noHeight, padding, extraSide, stage);
+            clampCurrentPos(noBtn, limits);
+        });
     </script>
 </body>
 </html>
