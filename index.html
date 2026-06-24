@@ -446,7 +446,24 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
         const simBtnEl = document.getElementById('simBtn');
         if (simBtnEl) simBtnEl.addEventListener('touchstart', (e) => { e.stopPropagation(); });
 
+        function syncButtonWidths() {
+            const sim = document.getElementById('simBtn');
+            const no = document.getElementById('noBtn');
+            if (!sim || !no) return;
+
+            sim.style.width = '';
+            no.style.width = '';
+
+            const simW = Math.ceil(sim.getBoundingClientRect().width);
+            const noW = Math.ceil(no.getBoundingClientRect().width);
+            sim.style.width = target + 'px';
+            no.style.width = target + 'px';
+        }
+
+        window.addEventListener('load', syncButtonWidths);
         window.addEventListener('resize', () => {
+            clearTimeout(window.__syncBtnTimeout);
+            window.__syncBtnTimeout = setTimeout(syncButtonWidths, 120);
             const noBtn = document.getElementById('noBtn');
             if (!noBtn) return;
             const stage = document.querySelector('.stage');
@@ -457,6 +474,23 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
             const limits = computeLimits(noWidth, noHeight, padding, extraSide, stage);
             clampCurrentPos(noBtn, limits);
         });
+
+        const origEvade = evadeAndGrow;
+        function wrappedEvade(e) {
+            origEvade(e);
+            requestAnimationFrame(() => requestAnimationFrame(syncButtonWidths));
+        }
+        (function replaceNoBtnPointerUp() {
+            const noBtnEl = document.getElementById('noBtn');
+            if (!noBtnEl) return;
+            noBtnEl.removeEventListener('pointerup', onPointerUp, { passive: false });
+            noBtnEl.addEventListener('pointerup', (e) => {
+                if (e.cancelable) e.preventDefault();
+                wrappedEvade(e);
+            }, { passive: false });
+        })();
+
+        setTimeout(syncButtonWidths, 300);
     </script>
 </body>
 </html>
