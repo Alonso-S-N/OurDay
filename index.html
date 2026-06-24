@@ -410,17 +410,37 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
 
         const noBtnEl = document.getElementById('noBtn');
         if (noBtnEl) {
-           
-            noBtnEl.addEventListener('click', (e) => {
-                e.preventDefault();
-                evadeAndGrow(e);
-            });
+            let pointerInfo = null;
 
-     
-            noBtnEl.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                evadeAndGrow(e);
-            }, { passive: false });
+            const onPointerDown = (e) => {
+                if (e.cancelable) e.preventDefault();
+                pointerInfo = { id: e.pointerId, startX: e.clientX, startY: e.clientY, moved: false };
+                try { noBtnEl.setPointerCapture(e.pointerId); } catch (err) { }
+            };
+
+            const onPointerMove = (e) => {
+                if (!pointerInfo || e.pointerId !== pointerInfo.id) return;
+                const dx = e.clientX - pointerInfo.startX;
+                const dy = e.clientY - pointerInfo.startY;
+                if (Math.hypot(dx, dy) > 10) pointerInfo.moved = true;
+            };
+
+            const onPointerUp = (e) => {
+                if (!pointerInfo || e.pointerId !== pointerInfo.id) { pointerInfo = null; return; }
+                try { noBtnEl.releasePointerCapture(e.pointerId); } catch (err) {  }
+                if (!pointerInfo.moved) {
+                    if (e.cancelable) e.preventDefault();
+                    evadeAndGrow(e);
+                }
+                pointerInfo = null;
+            };
+
+      
+            noBtnEl.addEventListener('pointerdown', onPointerDown, { passive: false });
+            noBtnEl.addEventListener('pointermove', onPointerMove, { passive: false });
+            noBtnEl.addEventListener('pointerup', onPointerUp, { passive: false });
+
+            noBtnEl.addEventListener('pointercancel', () => { pointerInfo = null; });
         }
 
         const simBtnEl = document.getElementById('simBtn');
