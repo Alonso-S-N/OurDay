@@ -222,6 +222,7 @@
                 attempts++;
             }
             simBtn.textContent = next;
+            requestAnimationFrame(syncButtonWidths);
         }
 
         function escapeHtml(str) {
@@ -451,13 +452,18 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
             const no = document.getElementById('noBtn');
             if (!sim || !no) return;
 
-            sim.style.width = '';
-            no.style.width = '';
+            sim.style.width = 'auto';
+            sim.style.height = 'auto';
+            no.style.width = 'auto';
+            no.style.height = 'auto';
 
-            const simW = Math.ceil(sim.getBoundingClientRect().width);
-            const noW = Math.ceil(no.getBoundingClientRect().width);
-            sim.style.width = target + 'px';
-            no.style.width = target + 'px';
+            const maxW = Math.max(sim.offsetWidth, no.offsetWidth);
+            const maxH = Math.max(sim.offsetHeight, no.offsetHeight);
+
+            sim.style.width = maxW + 'px';
+            sim.style.height = maxH + 'px';
+            no.style.width = maxW + 'px';
+            no.style.height = maxH + 'px';
         }
 
         window.addEventListener('load', syncButtonWidths);
