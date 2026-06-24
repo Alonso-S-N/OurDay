@@ -46,7 +46,7 @@
             box-sizing: border-box;
             pointer-events: auto;
             overflow: visible;
-            touch-action: none;
+            touch-action: pan-y;
         }
 
         .content {
@@ -54,8 +54,8 @@
             width: 100%;
             text-align: center;
             pointer-events: auto;
-            max-height: calc(100vh - 160px);
-            overflow: auto;
+            max-height: calc(100vh - 220px);
+            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 0 8px;
         }
@@ -74,21 +74,23 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 32px;
         }
 
         .final-btn {
-            display: inline-block;
-            margin: 16px auto 0;
-            padding: 12px 20px;
-            background: linear-gradient(135deg,pink, rgb(234, 17, 53));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(197, 90, 90, 0.251);
-            font-size: 18px;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
+        display: block;
+        margin: 40px auto 20px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg,pink, rgb(234, 17, 53));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(197, 90, 90, 0.251);
+        font-size: 18px;
+        cursor: pointer;
+        transition: transform 200ms ease, left 200ms ease, top 200ms ease;
+       
+    }
 
         .buttons {
             position: relative; 
@@ -124,7 +126,7 @@
         #simBtn {
             position: relative;
             transform-origin: center center;
-            max-width: 260px;        
+            max-width: 40 hw;        
             white-space: normal;      
             overflow-wrap: break-word;
             word-break: break-word;
@@ -155,11 +157,6 @@
             background: transparent;
         }
 
-        .content {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(233,17,53,0.95) rgba(255,255,255,0.06);
-        }
-
         .content.scrollable::after {
             content: '';
             position: absolute;
@@ -180,7 +177,10 @@
             button { padding: 14px 20px; font-size: 18px; border-radius: 12px; min-width: 120px; }
             #simBtn { max-width: 80%; }
             .message { font-size: clamp(20px, 6.5vw, 36px); }
+            .content {
+             max-height: calc(100vh - 180px); }
         }
+
     </style>
 </head>
 <body>
@@ -225,15 +225,29 @@
         }
 
         function handleSimClick() {
-            const text = `aeeeee, eu sabia que você ia aceitar! te amo muito, agora eu posso oficialmente te chamar de minha namorada? <3
+            const text = 
+`aeeeee, eu sabia que você ia aceitar! te amo muito, agora eu posso oficialmente te chamar de minha namorada? 💙
 kkkkk.
-Vamos fazer algo para comemorar? vou te levar para jantar e depois a gente pode assistir um filme ou algo assim, o que você acha?
 
-nem acredito que agora eu posso chamar a minha princesa de minha namorada, agente finalmente está namorando, eu tô tão feliz! obrigado por me fazer a pessoa mais sortuda do mundo, eu prometo te fazer muito feliz e cuidar de você sempre, em troca você só precisa me prometer que os olhinhos pelos quais eu me apaixonei vão continuar brilhando para mim todos os dias e, que vão continuar sendo só meus 🙄🙄 
-eu te amo mil milhões`;
+Nem acredito que agora eu posso chamar a minha princesa de minha namorada, a gente finalmente está namorando, obrigado por me fazer a pessoa mais sortuda do mundo, eu prometo te fazer muito feliz e cuidar de você sempre, em troca você só precisa me prometer que os olhinhos pelos quais eu me apaixonei vão continuar brilhando para mim todos os dias e, que vão continuar sendo só meus 🙄🙄.
+
+Você é minha pessoa favorita e sempre vai ser, eu amo cada mini detalhe seu (até aqueles que você mesma não gosta), eu amo seu sorriso, eu amo aquele seu jeitinho, eu amo quando você me abraça do nada, eu amo quando você me chama de meu amor, eu amo quando você me chama de meu namorado, eu amo quando você me chama de meu bebê, eu amo aquele seu olhar que é só meu, eu amo a sua voz, eu amo cada beijinho que você me dá, eu amo quando você me chama de neném, mas esse ultimo ce não conta pra ninguem 🙄🙄🙄🙄, eu amo aquela sua risada ( você parece uma criancinha, é muito fofoooooooooo ), eu amo que você não sabe reagir aos meus elogios kkkkkkk, você fica vermelinha meu Deus kkkkkk. 
+
+Poderia ficar aqui para sempre falando coisas e mais coisas, mas eu prefiro ir te contando aleatoriamente pelas semanas e ir te mostrando o quanto eu te amo, porque eu sei que você gosta de ouvir isso, e eu gosto de falar, então é perfeito.
+
+eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha continue me amando cada dia mais, nosso relacionamento é e sempre será a minha flor de lótus espelhada (e dessa vez você não é nerd o suficiente pra entender kkkkk, se tu entender você realmente prestou atenção no que eu te falei).`;
 
             const content = document.querySelector('.content');
-            content.innerHTML = `<div class="message">${escapeHtml(text).replace(/\n/g, '<br>')}</div>`;
+
+           content.innerHTML = `<div class="message">${escapeHtml(text).replace(/\n/g, '<br>')}</div>`;
+
+            content.scrollTop = 0;
+
+            requestAnimationFrame(() => {
+                content.scrollTop = 0;
+            });
+
+            window.scrollTo(0, 0);
 
             const buttons = document.querySelector('.buttons');
             if (buttons && buttons.parentElement) buttons.parentElement.removeChild(buttons);
@@ -245,14 +259,38 @@ eu te amo mil milhões`;
 
             const finalBtn = document.createElement('button');
             finalBtn.id = 'finalBtn';
-            finalBtn.className = 'final-btn'; /* usa a classe final-btn para o estilo */
+            finalBtn.className = 'final-btn';
             finalBtn.textContent = 'Minha reação :D';
+
             finalBtn.addEventListener('click', () => {
                 window.open('https://youtu.be/8Go6dHuylyM', '_blank');
             });
 
+           finalBtn.style.display = 'none';
+
             content.appendChild(finalBtn);
-            finalBtn.focus();
+
+            requestAnimationFrame(() => {
+            content.scrollTop = 0;
+            });
+            
+            function checkScrollEnd() {
+                const distanceFromBottom =
+                    content.scrollHeight -
+                    content.clientHeight -
+                    content.scrollTop;
+
+                if (distanceFromBottom <= 5) {
+                    finalBtn.style.display = 'block';
+                    content.removeEventListener('scroll', checkScrollEnd);
+                }
+            }
+
+            content.addEventListener('scroll', checkScrollEnd);
+
+            checkScrollEnd();
+
+        content.addEventListener('scroll', checkScrollEnd);
         }
 
         function computeLimits(noWidth, noHeight, padding, extraSide, stage) {
@@ -372,9 +410,6 @@ eu te amo mil milhões`;
             noBtnEl.addEventListener('touchstart', (e) => { e.preventDefault(); evadeAndGrow(e); }, { passive: false });
             noBtnEl.addEventListener('touchmove', (e) => { e.preventDefault(); evadeAndGrow(e); }, { passive: false });
         }
-
-        const stageEl = document.querySelector('.stage');
-        if (stageEl) stageEl.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
 
         const simBtnEl = document.getElementById('simBtn');
         if (simBtnEl) simBtnEl.addEventListener('touchstart', (e) => { e.stopPropagation(); });
