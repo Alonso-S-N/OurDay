@@ -405,9 +405,17 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
 
         const noBtnEl = document.getElementById('noBtn');
         if (noBtnEl) {
-            noBtnEl.addEventListener('mouseover', () => { evadeAndGrow(); });
-            noBtnEl.addEventListener('touchstart', (e) => { e.preventDefault(); evadeAndGrow(e); }, { passive: false });
-            noBtnEl.addEventListener('touchmove', (e) => { e.preventDefault(); evadeAndGrow(e); }, { passive: false });
+           
+            noBtnEl.addEventListener('click', (e) => {
+                e.preventDefault();
+                evadeAndGrow(e);
+            });
+
+     
+            noBtnEl.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                evadeAndGrow(e);
+            }, { passive: false });
         }
 
         const simBtnEl = document.getElementById('simBtn');
