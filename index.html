@@ -126,12 +126,15 @@
         #simBtn {
             position: relative;
             transform-origin: center center;
-            max-width: 40 hw;        
+            max-width: 60%;         /* antes: "40 hw" (typo) -> agora responsivo */
+            min-width: 80px;
+            font-size: clamp(14px, 3.5vw, 18px); /* evita texto enorme */
             white-space: normal;      
             overflow-wrap: break-word;
             word-break: break-word;
             text-align: center;
             display: inline-block;
+            transition: transform 160ms ease; /* suaviza scale */
         }
 
         #noBtn, #simBtn { flex: 0 0 auto; }
@@ -293,12 +296,13 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
         }
 
         function computeLimits(noWidth, noHeight, padding, extraSide, stage) {
-            const visibleMargin = Math.max(24, Math.round(window.innerWidth * 0.06)); 
-            const minLeft = Math.max(-extraSide, -noWidth + visibleMargin);
-            const maxLeftCalc = Math.max(minLeft, stage.clientWidth - noWidth - padding + extraSide);
-            const maxLeft = Math.min(maxLeftCalc, stage.clientWidth - visibleMargin);
-            const minTop = Math.max(-noHeight + visibleMargin, 0); 
-            const maxTop = Math.max(minTop, stage.clientHeight - visibleMargin);
+        
+            const minVisible = Math.max(40, Math.round(window.innerWidth * 0.12));
+            const minLeft = Math.max(-extraSide, -noWidth + minVisible);
+            const maxLeftCalc = Math.max(minLeft, stage.clientWidth - minVisible);
+            const maxLeft = Math.min(maxLeftCalc, stage.clientWidth - minVisible);
+            const minTop = Math.max(8, 0); 
+            const maxTop = Math.max(minTop, stage.clientHeight - noHeight - 8); 
             return { minLeft, maxLeft, minTop, maxTop };
         }
 
@@ -339,7 +343,7 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
 
             if (simBtn) {
                 let scale = parseFloat(simBtn.dataset.scale) || 1;
-                scale = Math.min(scale + 0.1, 2);
+                scale = Math.min(scale + 0.06, 1.12); 
                 simBtn.dataset.scale = scale;
                 simBtn.style.transform = `scale(${scale})`;
                 changeSimText();
