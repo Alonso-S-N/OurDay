@@ -108,6 +108,9 @@
         }
 
         button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             padding: 12px 22px;
             border: none;
             font-size: 16px;
@@ -119,8 +122,8 @@
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             user-select: none;
-            min-width: 110px; 
-            height: auto;
+            min-width: 110px;
+            box-sizing: border-box;
         }
 
         #noBtn { position: relative; }
@@ -128,14 +131,16 @@
             position: relative;
             transform-origin: center center;
             max-width: 60%;
-            min-width: 110px; 
+            min-width: 110px;
             font-size: clamp(14px, 3.5vw, 18px);
-            white-space: normal;      
+            white-space: normal;
             overflow-wrap: break-word;
             word-break: break-word;
             text-align: center;
-            display: inline-block;
-            transition: transform 160ms ease; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 160ms ease;
         }
 
         #noBtn, #simBtn { flex: 0 0 auto; }
@@ -450,28 +455,28 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
             const sim = document.getElementById('simBtn');
             const no = document.getElementById('noBtn');
             if (!sim || !no) return;
-
             if (sim.dataset.initialSynced === 'true' || no.dataset.initialSynced === 'true') return;
-
             sim.style.width = 'auto';
+            sim.style.height = 'auto';
             no.style.width = 'auto';
-
-            const simW = Math.ceil(sim.getBoundingClientRect().width);
-            const noW = Math.ceil(no.getBoundingClientRect().width);
-            const target = Math.max(simW, noW, 110);
-
-            sim.style.width = target + 'px';
-            no.style.width = target + 'px';
-
+            no.style.height = 'auto';
+            const simRect = sim.getBoundingClientRect();
+            const noRect = no.getBoundingClientRect();
+            const targetW = Math.max(Math.ceil(simRect.width), Math.ceil(noRect.width), 110);
+            const targetH = Math.max(Math.ceil(simRect.height), Math.ceil(noRect.height));
+            sim.style.width = targetW + 'px';
+            sim.style.height = targetH + 'px';
+            no.style.width = targetW + 'px';
+            no.style.height = targetH + 'px';
             sim.dataset.initialSynced = 'true';
             no.dataset.initialSynced = 'true';
         }
 
+        window.addEventListener('DOMContentLoaded', syncButtonWidths);
         window.addEventListener('load', syncButtonWidths);
         window.addEventListener('resize', () => {
             clearTimeout(window.__syncBtnTimeout);
             window.__syncBtnTimeout = setTimeout(syncButtonWidths, 120);
-
             const noBtn = document.getElementById('noBtn');
             if (!noBtn) return;
             const stage = document.querySelector('.stage');
@@ -483,7 +488,7 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
             clampCurrentPos(noBtn, limits);
         });
 
-        setTimeout(syncButtonWidths, 300);
+        setTimeout(syncButtonWidths, 0);
     </script>
 </body>
 </html>
