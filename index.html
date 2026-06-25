@@ -6,7 +6,7 @@
     <title>Our Day</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Molle:ital@1&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="images.jpg" type="image/x-icon">
     <style>
         html, body {
@@ -18,11 +18,12 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        body {
-            font-family: "Imperial Script", cursive;
+            body {
+            font-family:"Molle", cursive;
             font-weight: 400;
+            font-style: italic;
             font-size: large;
-            background: linear-gradient(180deg, black,rgb(234, 17, 53),pink);
+            background: linear-gradient(180deg, #FFC1CE,#FB96AC,#F46A8A,#DD385D,#9A162E);
             -webkit-font-smoothing: antialiased;
         }
 
@@ -81,7 +82,7 @@
         display: block;
         margin: 40px auto 20px;
         padding: 12px 20px;
-        background: linear-gradient(135deg,pink, rgb(234, 17, 53));
+        background: linear-gradient(135deg,#FFC1CE,#FB96AC,#F46A8A,#DD385D,#9A162E);
         color: white;
         border: none;
         border-radius: 8px;
@@ -116,7 +117,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: transform 200ms ease, left 200ms ease, top 200ms ease;
-            background: linear-gradient(135deg,pink, rgb(234, 17, 53));
+            background: linear-gradient(135deg,#FFC1CE,#FB96AC,#F46A8A,#DD385D,#9A162E);
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(197, 90, 90, 0.251);
             -webkit-tap-highlight-color: transparent;
@@ -124,6 +125,11 @@
             user-select: none;
             min-width: 110px;
             box-sizing: border-box;
+              font-family:"Molle", cursive;
+            font-weight: 400;
+            font-style: italic;
+            font-size: large;
+            color: rgb(255, 9, 9);
         }
 
         #noBtn { position: relative; }
@@ -270,7 +276,7 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
             const finalBtn = document.createElement('button');
             finalBtn.id = 'finalBtn';
             finalBtn.className = 'final-btn';
-            finalBtn.textContent = 'Minha reação :D';
+            finalBtn.textContent = 'Minha reação 🤠';
 
             finalBtn.addEventListener('click', () => {
                 window.open('https://youtu.be/8Go6dHuylyM', '_blank');
