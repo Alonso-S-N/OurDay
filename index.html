@@ -130,7 +130,8 @@
         #simBtn {
             position: relative;
             transform-origin: center center;
-            max-width: 60%;
+            width: auto;
+            max-width: 80vw;
             min-width: 110px;
             font-size: clamp(14px, 3.5vw, 18px);
             white-space: normal;
@@ -140,7 +141,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: transform 160ms ease;
+            transition: transform 160ms ease, width 160ms ease;
+            box-sizing: border-box;
         }
 
         #noBtn, #simBtn { flex: 0 0 auto; }
@@ -349,10 +351,11 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
 
             if (simBtn) {
                 let scale = parseFloat(simBtn.dataset.scale) || 1;
-                scale = Math.min(scale + 0.06, 1.12); 
+                scale = Math.min(scale + 0.06, 1.12);
                 simBtn.dataset.scale = scale;
                 simBtn.style.transform = `scale(${scale})`;
                 changeSimText();
+                updateSimButtonWidth(simBtn);
             }
 
             const padding = 8;
@@ -464,12 +467,30 @@ eu te amo mil milhões minha princesinha, e eu espero que a minha garotinha cont
             const noRect = no.getBoundingClientRect();
             const targetW = Math.max(Math.ceil(simRect.width), Math.ceil(noRect.width), 110);
             const targetH = Math.max(Math.ceil(simRect.height), Math.ceil(noRect.height));
-            sim.style.width = targetW + 'px';
+            const maxAllowed = Math.min(Math.round(window.innerWidth * 0.85), 320);
+            const finalW = Math.min(targetW, maxAllowed);
+            sim.style.width = finalW + 'px';
             sim.style.height = targetH + 'px';
-            no.style.width = targetW + 'px';
+            no.style.width = finalW + 'px';
             no.style.height = targetH + 'px';
             sim.dataset.initialSynced = 'true';
             no.dataset.initialSynced = 'true';
+            sim.dataset.initialWidth = finalW;
+        }
+
+        function updateSimButtonWidth(simBtn) {
+            if (!simBtn) return;
+            const maxAllowed = Math.min(Math.round(window.innerWidth * 0.85), 320);
+            const currentWidth = simBtn.getBoundingClientRect().width;
+            simBtn.style.width = 'auto';
+            const naturalWidth = simBtn.getBoundingClientRect().width;
+            const baseWidth = parseFloat(simBtn.dataset.initialWidth) || currentWidth;
+            const targetWidth = Math.min(
+                maxAllowed,
+                Math.max(baseWidth, naturalWidth, currentWidth + 16)
+            );
+            simBtn.style.width = targetWidth + 'px';
+            simBtn.style.maxWidth = maxAllowed + 'px';
         }
 
         window.addEventListener('DOMContentLoaded', syncButtonWidths);
